@@ -1,0 +1,41 @@
+
+
+CC:= gcc
+AR:= ar
+
+SRC = $(wildcard SRC/*.c)
+OBJS = $(SRC:.c=.o)
+
+PROJECTNAME := Crypto
+
+
+TARGET = main
+
+all:$(OBJS)
+	$(CC) $(OBJS) -o $(TARGET) 
+$(OBJS):%.o:%.c
+	$(CC) -c $< -o $@ 
+
+########################################################################################
+#make lib
+########################################################################################
+
+TARGETLIB := lib$(PROJECTNAME).a
+
+slib:
+	 $(AR) -cr $(TARGETLIB) SRC/Tag.o \
+	 												SRC/TlvDecoder.o \
+
+########################################################################################
+#copy to the  release directory
+########################################################################################
+
+RELEASEDIR := $(SOLOICESKYDIR)/$(PROJECTNAME)/realease
+	 												
+release:
+	 cp -rf $(TARGETLIB) $(RELEASEDIR)/libs/static
+	 cp -rf SRC/*.h $(RELEASEDIR)/includes
+	 cp -rf SRC/*.h $(INCDIR)
+clean:
+	rm $(OBJS) $(TARGET)
+	rm -rf ./Release

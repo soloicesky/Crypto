@@ -1,0 +1,3 @@
+---- XYSSL_HAVE_INT8 Matches (2 in 2 files) ----
+Bignum.h (src):#if defined(XYSSL_HAVE_INT8)
+Config.h (src):#define XYSSL_HAVE_INT8
