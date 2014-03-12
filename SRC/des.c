@@ -634,6 +634,160 @@ void des3_crypt_cbc( des3_context *ctx,
     }
 }
 
+
+void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsigned char *output, int mode, int desTpe)
+{
+	des_context ctx;
+	des3_context ctx3;
+	unsigned char blockIn[8];
+	unsigned char blockOut[8];
+	unsigned char iv[8];
+	int i = 0;
+	int round = 0;
+	unsigned char RemainderFlag = 0;
+
+
+	round = ((inputLen%8) == 0)?inputLen/8:(inputLen/8 + 1);
+	
+	if((inputLen%8))
+	{
+		RemainderFlag = 1;
+	}
+	else
+	{
+		RemainderFlag = 0;
+	}
+
+
+	switch(keyLen)
+	{
+		case 8:
+		default:
+			switch(mode)
+			{
+				case DES_ENCRYPT:
+					des_setkey_enc( &ctx,  key );						
+					break;
+			
+				case DES_DECRYPT:
+				default:
+					des_setkey_dec( &ctx,  key );					
+					break;
+			}
+
+			for(i = 0; i<round; i++)
+			{
+				memset(blockIn, 0x00, sizeof(blockIn));
+				memset(blockOut, 0x00, sizeof(blockOut));
+
+				if(desTpe == ECB)
+				{
+					des_crypt_ecb( &ctx,   blockIn,    blockOut );
+				}
+				else
+				{
+					memset(iv, 0x00, sizeof(iv));
+					des_crypt_cbc(&ctx,   mode,   8, iv ,		input,	  output );
+				}
+
+				if(i == (round -1) && RemainderFlag)
+				{
+					memcpy(output+i*8, blockOut, (inputLen%8));
+				}
+				else
+				{
+					memcpy(output+i*8, blockOut, 8);
+				}
+			}
+
+			break;
+
+		case 16:
+		
+			switch(mode)
+			{
+				case DES_ENCRYPT:
+					des3_set2key_enc( &ctx3,  key );
+					
+					break;
+			
+				case DES_DECRYPT:
+				default:
+					des3_set2key_dec( &ctx3,  key );
+					break;
+			}
+			
+			for(i = 0; i<round; i++)
+			{
+				memset(blockIn, 0x00, sizeof(blockIn));
+				memset(blockOut, 0x00, sizeof(blockOut));
+				if(desTpe == ECB)
+				{
+					des3_crypt_ecb( &ctx3,	 blockIn,	 blockOut );
+				}
+				else
+				{
+					des3_crypt_cbc(&ctx3,   mode,   8, iv , input,  output );
+
+				}
+	
+				if(i == (round -1) && RemainderFlag)
+				{
+					memcpy(output+i*8, blockOut, (inputLen%8));
+				}
+				else
+				{
+					memcpy(output+i*8, blockOut, 8);
+				}
+			}
+
+			break;
+		case 24:
+		
+			switch(mode)
+			{
+				case DES_ENCRYPT:
+					des3_set3key_enc( &ctx3,  key );
+					break;
+
+				case DES_DECRYPT:
+				default:
+					des3_set3key_dec( &ctx3,  key );
+					break;
+			}
+
+			
+			for(i = 0; i<round; i++)
+			{
+				memset(blockIn, 0x00, sizeof(blockIn));
+				memset(blockOut, 0x00, sizeof(blockOut));
+				
+				if(desTpe == ECB)
+				{
+					des3_crypt_ecb( &ctx3,	 blockIn,	 blockOut );
+				}
+				else
+				{
+					des3_crypt_cbc(&ctx3,   mode,   8, iv , input,  output );
+
+				}
+			
+				if(i == (round -1) && RemainderFlag)
+				{
+					memcpy(output+i*8, blockOut, (inputLen%8));
+				}
+				else
+				{
+					memcpy(output+i*8, blockOut, 8);
+				}
+			}
+
+			break;
+
+	}
+	
+}
+
 #if defined(XYSSL_SELF_TEST)
 
 #include <stdio.h>

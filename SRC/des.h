@@ -7,6 +7,8 @@
 #define DES_ENCRYPT     1
 #define DES_DECRYPT     0
 
+#define  ECB			1	
+#define  CBC			0
 /**
  * \brief          DES context structure
  */
@@ -135,6 +137,8 @@ void des3_crypt_cbc( des3_context *ctx,
                      unsigned char *input,
                      unsigned char *output );
 
+void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,
+		unsigned char *output, int mode, int desTpe);
 /*
  * \brief          Checkup routine
  *
