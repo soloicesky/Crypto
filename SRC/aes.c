@@ -327,10 +327,10 @@ static const unsigned long RCON[10] =
  * Forward S-box & tables
  */
 static unsigned char FSb[256];
-static unsigned long FT0[256]; 
-static unsigned long FT1[256]; 
-static unsigned long FT2[256]; 
-static unsigned long FT3[256]; 
+static unsigned long FT0[256];
+static unsigned long FT1[256];
+static unsigned long FT2[256];
+static unsigned long FT3[256];
 
 /*
  * Reverse S-box & tables

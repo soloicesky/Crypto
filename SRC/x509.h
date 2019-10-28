@@ -147,7 +147,7 @@ typedef struct _x509_cert
     x509_buf sig_oid2;
     x509_buf sig;
 
-    struct _x509_cert *next; 
+    struct _x509_cert *next;
 }
 x509_cert;
 

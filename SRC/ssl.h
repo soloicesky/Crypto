@@ -398,7 +398,7 @@ int ssl_set_dh_param( ssl_context *ssl, char *dhm_P, char *dhm_G );
 
 /**
  * \brief          Set hostname for ServerName TLS Extension
- *                 
+ *
  *
  * \param ssl      SSL context
  * \param hostname the server hostname

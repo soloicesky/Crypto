@@ -7,7 +7,7 @@
 #define DES_ENCRYPT     1
 #define DES_DECRYPT     0
 
-#define  ECB			1	
+#define  ECB			1
 #define  CBC			0
 /**
  * \brief          DES context structure

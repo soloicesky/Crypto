@@ -21,6 +21,7 @@
  *  The SHA-256 Secure Hash Standard was published by NIST in 2002.
  *
  *  http://csrc.nist.gov/publications/fips/fips180-2/fips180-2.pdf
+ *  https://en.wikipedia.org/wiki/SHA-2
  */
 
 #include "config.h"
@@ -125,12 +126,14 @@ static void sha2_process( sha2_context *ctx, unsigned char data[64] )
 #define F0(x,y,z) ((x & y) | (z & (x | y)))
 #define F1(x,y,z) (z ^ (x & (y ^ z)))
 
+#undef R
 #define R(t)                                    \
 (                                               \
     W[t] = S1(W[t -  2]) + W[t -  7] +          \
            S0(W[t - 15]) + W[t - 16]            \
 )
 
+#undef P
 #define P(a,b,c,d,e,f,g,h,x,K)                  \
 {                                               \
     temp1 = h + S3(e) + F1(e,f,g) + K + x;      \
@@ -434,7 +437,7 @@ void sha2_hmac( unsigned char *key, int keylen,
 /*
  * FIPS-180-2 test vectors
  */
-static unsigned char sha2_test_buf[3][57] = 
+static unsigned char sha2_test_buf[3][57] =
 {
     { "abc" },
     { "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq" },

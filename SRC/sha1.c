@@ -21,6 +21,7 @@
  *  The SHA-1 standard was published by NIST in 1993.
  *
  *  http://www.itl.nist.gov/fipspubs/fip180-1.htm
+ *  https://en.wikipedia.org/wiki/SHA-1
  */
 
 #include "config.h"
@@ -100,6 +101,7 @@ static void sha1_process( sha1_context *ctx, unsigned char data[64] )
     ( W[t & 0x0F] = S(temp,1) )                         \
 )
 
+#undef P
 #define P(a,b,c,d,e,x)                                  \
 {                                                       \
     e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
@@ -427,7 +429,7 @@ void sha1_hmac( unsigned char *key, int keylen,
 /*
  * FIPS-180-1 test vectors
  */
-static unsigned char sha1_test_buf[3][57] = 
+static unsigned char sha1_test_buf[3][57] =
 {
     { "abc" },
     { "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq" },

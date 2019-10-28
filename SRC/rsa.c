@@ -75,7 +75,7 @@ int rsa_gen_key( rsa_context *ctx, int nbits, int exponent )
 
     do
     {
-        MPI_CHK( mpi_gen_prime( &ctx->P, ( nbits + 1 ) >> 1, 0, 
+        MPI_CHK( mpi_gen_prime( &ctx->P, ( nbits + 1 ) >> 1, 0,
                                 ctx->f_rng, ctx->p_rng ) );
 
         MPI_CHK( mpi_gen_prime( &ctx->Q, ( nbits + 1 ) >> 1, 0,
@@ -121,7 +121,7 @@ cleanup:
         return( XYSSL_ERR_RSA_KEY_GEN_FAILED | ret );
     }
 
-    return( 0 );   
+    return( 0 );
 }
 
 #endif
@@ -131,7 +131,7 @@ cleanup:
  */
 int rsa_check_pubkey( rsa_context *ctx )
 {
-    if( ( ctx->N.p[0] & 1 ) == 0 || 
+    if( ( ctx->N.p[0] & 1 ) == 0 ||
         ( ctx->E.p[0] & 1 ) == 0 )
         return( XYSSL_ERR_RSA_KEY_CHECK_FAILED );
 
@@ -401,11 +401,20 @@ int rsa_pkcs1_sign( rsa_context *ctx,
                 case RSA_MD2:
                 case RSA_MD4:
                 case RSA_MD5:
-                    nb_pad = olen - 3 - 34;
+                    nb_pad = olen - 3 - 18 - 16;
                     break;
 
                 case RSA_SHA1:
-                    nb_pad = olen - 3 - 35;
+                    nb_pad = olen - 3 - 15 - 20;
+                    break;
+
+                case RSA_SHA256:
+                    nb_pad = olen - 3 - 19 - 32;
+                    break;
+
+                case RSA_SHA384:
+                case RSA_SHA512:
+                    nb_pad = olen - 3 - 19 - 64;
                     break;
 
                 default:
@@ -453,6 +462,24 @@ int rsa_pkcs1_sign( rsa_context *ctx,
             memcpy( p + 15, hash, 20 );
             break;
 
+        case RSA_SHA256:
+            memcpy( p, ASN1_HASH_SHA2, 19 );
+            memcpy( p + 19, hash, 32 );
+            p[1] = 0x31; p[14] = 0x01; p[18] = 0x20;
+            break;
+
+        case RSA_SHA384:
+            memcpy( p, ASN1_HASH_SHA2, 19 );
+            memcpy( p + 19, hash, 64 );
+            p[1] = 0x41; p[14] = 0x02; p[18] = 0x30;
+            break;
+
+        case RSA_SHA512:
+            memcpy( p, ASN1_HASH_SHA2, 19 );
+            memcpy( p + 19, hash, 64 );
+            p[1] = 0x51; p[14] = 0x03; p[18] = 0x40;
+            break;
+
         default:
             return( XYSSL_ERR_RSA_BAD_INPUT_DATA );
     }
@@ -473,7 +500,7 @@ int rsa_pkcs1_verify( rsa_context *ctx,
                       unsigned char *sig )
 {
     int ret, len, siglen;
-    unsigned char *p, c;
+    unsigned char *p, c, d, e;
     unsigned char buf[512];
 
     siglen = ctx->len;
@@ -513,7 +540,7 @@ int rsa_pkcs1_verify( rsa_context *ctx,
 
     len = siglen - (int)( p - buf );
 
-    if( len == 34 )
+    if( len == (18 + 16) )
     {
         c = p[13];
         p[13] = 0;
@@ -525,20 +552,47 @@ int rsa_pkcs1_verify( rsa_context *ctx,
             ( c == 4 && hash_id == RSA_MD4 ) ||
             ( c == 5 && hash_id == RSA_MD5 ) )
         {
-            if( memcmp( p + 18, hash, 16 ) == 0 ) 
+            if( memcmp( p + 18, hash, 16 ) == 0 )
                 return( 0 );
             else
                 return( XYSSL_ERR_RSA_VERIFY_FAILED );
         }
     }
 
-    if( len == 35 && hash_id == RSA_SHA1 )
+    if( len == (15 + 20) && hash_id == RSA_SHA1 )
     {
         if( memcmp( p, ASN1_HASH_SHA1, 15 ) == 0 &&
             memcmp( p + 15, hash, 20 ) == 0 )
             return( 0 );
         else
             return( XYSSL_ERR_RSA_VERIFY_FAILED );
+    }
+
+    if( (len == (19 + 32)) || (len == (19 + 64)) )
+    {
+        c = p[1];
+        p[1] = 0;
+
+        d = p[14];
+        p[14] = 0;
+
+        e = p[18];
+        p[18] = 0;
+
+        if( memcmp( p, ASN1_HASH_SHA2, 19 ) != 0 )
+            return( XYSSL_ERR_RSA_VERIFY_FAILED );
+
+        if( ( c == 0x31 && d == 0x01 && e == 0x20 && hash_id == RSA_SHA256 ) ||
+            ( c == 0x41 && d == 0x02 && e == 0x30 && hash_id == RSA_SHA384 ) ||
+            ( c == 0x51 && d == 0x03 && e == 0x40 && hash_id == RSA_SHA512 ) )
+        {
+            if( ( hash_id == RSA_SHA256 && memcmp( p + 19, hash, 32 ) == 0 ) ||
+                ( hash_id == RSA_SHA384 && memcmp( p + 19, hash, 64 ) == 0 ) ||
+                ( hash_id == RSA_SHA512 && memcmp( p + 19, hash, 64 ) == 0 ) )
+                return( 0 );
+            else
+                return( XYSSL_ERR_RSA_VERIFY_FAILED );
+        }
     }
 
     if( len == hashlen && hash_id == RSA_RAW )

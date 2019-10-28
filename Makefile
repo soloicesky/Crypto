@@ -13,9 +13,9 @@ PROJECTNAME := Crypto
 TARGET = libCrypto.so
 
 all:$(OBJS)
-	$(CC) -shared $(OBJS) -o $(TARGET) 
+	$(CC) -shared $(OBJS) -o $(TARGET)
 $(OBJS):%.o:%.c
-	$(CC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) -c $< -o $@
 
 ########################################################################################
 #make lib
@@ -42,7 +42,7 @@ slib:
 													SRC/rsa2.o     \
 													SRC/sha1.o     \
 													SRC/sha2.o     \
-													SRC/sha4.o     \
+													SRC/sha3.o     \
 													SRC/ssl_cli.o     \
 													SRC/ssl_srv.o     \
 													SRC/timing.o     \
@@ -53,7 +53,7 @@ slib:
 ########################################################################################
 
 RELEASEDIR := $(SOLOICESKYDIR)/$(PROJECTNAME)/realease
-	 												
+
 release:
 	 cp -rf $(TARGETLIB) $(RELEASEDIR)/libs/static
 	 cp -rf SRC/*.h $(RELEASEDIR)/includes

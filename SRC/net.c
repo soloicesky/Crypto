@@ -275,7 +275,7 @@ void net_usleep( unsigned long usec )
  * Read at most 'len' characters
  */
 int net_recv( void *ctx, unsigned char *buf, int len )
-{ 
+{
     int ret = read( *((int *) ctx), buf, len );
 
     if( len > 0 && ret == 0 )
