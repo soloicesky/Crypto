@@ -22,7 +22,7 @@ OBJS=	aes.o		arc4.o		base64.o	\
 	des.o		dhm.o		havege.o	\
 	md2.o		md4.o		md5.o		\
 	net.o		padlock.o	rsa.o		\
-	sha1.o		sha2.o		sha4.o		\
+	sha1.o		sha2.o		sha3.o		\
 	ssl_cli.o	ssl_srv.o	ssl_tls.o	\
 	timing.o	x509parse.o
 

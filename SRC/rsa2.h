@@ -74,7 +74,7 @@ NN_DIGIT NN_LShift PROTO_LIST
 	((NN_DIGIT *, NN_DIGIT *, unsigned int, unsigned int));
 NN_DIGIT NN_RShift PROTO_LIST
 	((NN_DIGIT *, NN_DIGIT *, unsigned int, unsigned int));
-NN_DIGIT NN_LRotate PROTO_LIST 
+NN_DIGIT NN_LRotate PROTO_LIST
 	((NN_DIGIT *, NN_DIGIT *, unsigned int, unsigned int));
 
 void NN_Mod PROTO_LIST

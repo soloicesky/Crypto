@@ -49,6 +49,7 @@
  * ------------------------------------------------------------------------
  */
 
+#undef SWAP
 #define SWAP(X,Y) { int *T = X; X = Y; Y = T; }
 
 #define TST1_ENTER if( PTEST & 1 ) { PTEST ^= 3; PTEST >>= 1;

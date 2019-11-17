@@ -80,7 +80,7 @@ void mpi_free( mpi *X, ... )
     {
         if( X->p != NULL )
         {
-            memset( X->p, 0, X->n * ciL );
+//            memset( X->p, 0, X->n * ciL );
             free( X->p );
         }
 
@@ -111,7 +111,7 @@ int mpi_grow( mpi *X, int nblimbs )
         if( X->p != NULL )
         {
             memcpy( p, X->p, X->n * ciL );
-            memset( X->p, 0, X->n * ciL );
+//            memset( X->p, 0, X->n * ciL );
             free( X->p );
         }
 
@@ -858,7 +858,7 @@ int mpi_sub_int( mpi *X, mpi *A, int b )
 
 /*
  * Helper for mpi multiplication
- */ 
+ */
 static void mpi_mul_hlp( int i, t_int *s, t_int *d, t_int b )
 {
     t_int c = 0, t = 0;
@@ -1364,7 +1364,7 @@ int mpi_exp_mod( mpi *X, mpi *A, mpi *E, mpi *N, mpi *_RR )
 
         for( i = 0; i < wsize - 1; i++ )
             mpi_montmul( &W[j], &W[j], N, mm, &T );
-    
+
         /*
          * W[i] = W[i - 1] * W[1]
          */

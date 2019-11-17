@@ -40,6 +40,7 @@
 #include "md4.h"
 #include "md5.h"
 #include "sha1.h"
+#include "sha2.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -398,7 +399,7 @@ static int x509_get_dates( unsigned char **p,
 
     if( sscanf( date, "%2d%2d%2d%2d%2d%2d",
                 &to->year, &to->mon, &to->day,
-                &to->hour, &to->min, &to->sec ) < 5 ) 
+                &to->hour, &to->min, &to->sec ) < 5 )
         return( XYSSL_ERR_X509_CERT_INVALID_DATE );
 
     to->year +=  100 * ( to->year < 90 );
@@ -686,7 +687,7 @@ int x509parse_crt( x509_cert *chain, unsigned char *buf, int buflen )
 
         if( ( p = (unsigned char *) malloc( len ) ) == NULL )
             return( 1 );
-            
+
         if( ( ret = base64_decode( p, &len, s1, s2 - s1 ) ) != 0 )
         {
             free( p );
@@ -1439,10 +1440,13 @@ char *x509parse_cert_info( char *prefix, x509_cert *crt )
 
     switch( crt->sig_oid1.p[8] )
     {
-        case RSA_MD2 : p += snprintf( p, end - p, "MD2"  ); break;
-        case RSA_MD4 : p += snprintf( p, end - p, "MD4"  ); break;
-        case RSA_MD5 : p += snprintf( p, end - p, "MD5"  ); break;
-        case RSA_SHA1: p += snprintf( p, end - p, "SHA1" ); break;
+        case RSA_MD2   : p += snprintf( p, end - p, "MD2"    ); break;
+        case RSA_MD4   : p += snprintf( p, end - p, "MD4"    ); break;
+        case RSA_MD5   : p += snprintf( p, end - p, "MD5"    ); break;
+        case RSA_SHA1  : p += snprintf( p, end - p, "SHA1"   ); break;
+        case RSA_SHA256: p += snprintf( p, end - p, "SHA256" ); break;
+        case RSA_SHA384: p += snprintf( p, end - p, "SHA384" ); break;
+        case RSA_SHA512: p += snprintf( p, end - p, "SHA512" ); break;
         default: p += snprintf( p, end - p, "???"  ); break;
     }
 
@@ -1484,13 +1488,16 @@ static void x509_hash( unsigned char *in, int len, int alg,
     switch( alg )
     {
 #if defined(XYSSL_MD2_C)
-        case RSA_MD2  :  md2( in, len, out ); break;
+        case RSA_MD2   :  md2( in, len, out    ); break;
 #endif
 #if defined(XYSSL_MD4_C)
-        case RSA_MD4  :  md4( in, len, out ); break;
+        case RSA_MD4   :  md4( in, len, out    ); break;
 #endif
-        case RSA_MD5  :  md5( in, len, out ); break;
-        case RSA_SHA1 : sha1( in, len, out ); break;
+        case RSA_MD5   :  md5( in, len, out    ); break;
+        case RSA_SHA1  : sha1( in, len, out    ); break;
+        case RSA_SHA256: sha2( in, len, out, 0 ); break;
+//      case RSA_SHA384: sha2( in, len, out, 0 ); break;
+//      case RSA_SHA512: sha2( in, len, out, 0 ); break;
         default:
             memset( out, '\xFF', len );
             break;
@@ -1729,7 +1736,17 @@ int x509_self_test( int verbose )
     if( ret != 0 )
     {
         if( verbose != 0 )
+        {
             printf( "failed\n" );
+            if (i & BADCERT_EXPIRED)
+                printf( "          flag & BADCERT_EXPIRED\n" );
+            if (i & BADCERT_REVOKED)
+                printf( "          flag & BADCERT_REVOKED\n" );
+            if (i & BADCERT_CN_MISMATCH)
+                printf( "          flag & BADCERT_CN_MISMATCH\n" );
+            if (i & BADCERT_NOT_TRUSTED)
+                printf( "          flag & BADCERT_NOT_TRUSTED\n" );
+        }
 
         return( ret );
     }

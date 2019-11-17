@@ -648,7 +648,7 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 
 
 	round = ((inputLen%8) == 0)?inputLen/8:(inputLen/8 + 1);
-	
+
 	if((inputLen%8))
 	{
 		RemainderFlag = 1;
@@ -666,12 +666,12 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 			switch(mode)
 			{
 				case DES_ENCRYPT:
-					des_setkey_enc( &ctx,  key );						
+					des_setkey_enc( &ctx,  key );
 					break;
-			
+
 				case DES_DECRYPT:
 				default:
-					des_setkey_dec( &ctx,  key );					
+					des_setkey_dec( &ctx,  key );
 					break;
 			}
 
@@ -703,20 +703,20 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 			break;
 
 		case 16:
-		
+
 			switch(mode)
 			{
 				case DES_ENCRYPT:
 					des3_set2key_enc( &ctx3,  key );
-					
+
 					break;
-			
+
 				case DES_DECRYPT:
 				default:
 					des3_set2key_dec( &ctx3,  key );
 					break;
 			}
-			
+
 			for(i = 0; i<round; i++)
 			{
 				memset(blockIn, 0x00, sizeof(blockIn));
@@ -730,7 +730,7 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 					des3_crypt_cbc(&ctx3,   mode,   8, iv , input,  output );
 
 				}
-	
+
 				if(i == (round -1) && RemainderFlag)
 				{
 					memcpy(output+i*8, blockOut, (inputLen%8));
@@ -743,7 +743,7 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 
 			break;
 		case 24:
-		
+
 			switch(mode)
 			{
 				case DES_ENCRYPT:
@@ -756,12 +756,12 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 					break;
 			}
 
-			
+
 			for(i = 0; i<round; i++)
 			{
 				memset(blockIn, 0x00, sizeof(blockIn));
 				memset(blockOut, 0x00, sizeof(blockOut));
-				
+
 				if(desTpe == ECB)
 				{
 					des3_crypt_ecb( &ctx3,	 blockIn,	 blockOut );
@@ -771,7 +771,7 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 					des3_crypt_cbc(&ctx3,   mode,   8, iv , input,  output );
 
 				}
-			
+
 				if(i == (round -1) && RemainderFlag)
 				{
 					memcpy(output+i*8, blockOut, (inputLen%8));
@@ -785,7 +785,7 @@ void Des(unsigned char *input, int inputLen, unsigned char *key, int keyLen,unsi
 			break;
 
 	}
-	
+
 }
 
 #if defined(XYSSL_SELF_TEST)

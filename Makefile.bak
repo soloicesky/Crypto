@@ -12,9 +12,9 @@ PROJECTNAME := Crypto
 TARGET = main
 
 all:$(OBJS)
-	$(CC) $(OBJS) -o $(TARGET) 
+	$(CC) $(OBJS) -o $(TARGET)
 $(OBJS):%.o:%.c
-	$(CC) -c $< -o $@ 
+	$(CC) -c $< -o $@
 
 ########################################################################################
 #make lib
@@ -31,7 +31,7 @@ slib:
 ########################################################################################
 
 RELEASEDIR := $(SOLOICESKYDIR)/$(PROJECTNAME)/realease
-	 												
+
 release:
 	 cp -rf $(TARGETLIB) $(RELEASEDIR)/libs/static
 	 cp -rf SRC/*.h $(RELEASEDIR)/includes

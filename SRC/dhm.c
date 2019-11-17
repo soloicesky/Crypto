@@ -235,7 +235,7 @@ void dhm_free( dhm_context *ctx )
 {
     mpi_free( &ctx->RP, &ctx->K, &ctx->GY,
               &ctx->GX, &ctx->X, &ctx->G,
-              &ctx->P, NULL );    
+              &ctx->P, NULL );
 }
 
 #if defined(XYSSL_SELF_TEST)
@@ -245,7 +245,9 @@ void dhm_free( dhm_context *ctx )
  */
 int dhm_self_test( int verbose )
 {
-    return( verbose++ );
+    printf( "  DHM test #1: none\n\n" );
+
+    return( 0 );
 }
 
 #endif

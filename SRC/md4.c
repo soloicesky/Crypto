@@ -375,7 +375,7 @@ void md4_hmac( unsigned char *key, int keylen, unsigned char *input, int ilen,
  */
 static const char md4_test_str[7][81] =
 {
-    { "" }, 
+    { "" },
     { "a" },
     { "abc" },
     { "message digest" },
