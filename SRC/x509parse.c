@@ -41,6 +41,7 @@
 #include "md5.h"
 #include "sha1.h"
 #include "sha2.h"
+#include "sha3.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -1496,8 +1497,8 @@ static void x509_hash( unsigned char *in, int len, int alg,
         case RSA_MD5   :  md5( in, len, out    ); break;
         case RSA_SHA1  : sha1( in, len, out    ); break;
         case RSA_SHA256: sha2( in, len, out, 0 ); break;
-//      case RSA_SHA384: sha2( in, len, out, 0 ); break;
-//      case RSA_SHA512: sha2( in, len, out, 0 ); break;
+        case RSA_SHA384: sha3( in, len, out, 0 ); break;
+        case RSA_SHA512: sha3( in, len, out, 0 ); break;
         default:
             memset( out, '\xFF', len );
             break;
