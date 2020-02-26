@@ -22,9 +22,10 @@
 #define RSA_MD4         3
 #define RSA_MD5         4
 #define RSA_SHA1        5
-#define RSA_SHA256      6
-#define RSA_SHA384      7
-#define RSA_SHA512      8
+#define RSA_SHA224      6
+#define RSA_SHA256      7
+#define RSA_SHA384      8
+#define RSA_SHA512      9
 
 #define RSA_PUBLIC      0
 #define RSA_PRIVATE     1
@@ -68,6 +69,11 @@
     "\x30\x00\x30\x0D\x06\x09\x60\x86\x48"  \
 	"\x01\x65\x03\x04\x02\x00\x05\x00\x04"  \
 	"\x00"
+
+#define ASN1_HASH_SHA224                    \
+    "\x30\x2D\x30\x0D\x06\x09\x60\x86\x48"  \
+	"\x01\x65\x03\x04\x02\x04\x05\x00\x04"  \
+	"\x1C"
 
 #define ASN1_HASH_SHA256                    \
     "\x30\x31\x30\x0D\x06\x09\x60\x86\x48"  \

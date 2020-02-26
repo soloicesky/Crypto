@@ -1444,6 +1444,7 @@ char *x509parse_cert_info( char *prefix, x509_cert *crt )
         case RSA_MD4   : p += snprintf( p, end - p, "MD4"    ); break;
         case RSA_MD5   : p += snprintf( p, end - p, "MD5"    ); break;
         case RSA_SHA1  : p += snprintf( p, end - p, "SHA1"   ); break;
+        case RSA_SHA224: p += snprintf( p, end - p, "SHA224" ); break;
         case RSA_SHA256: p += snprintf( p, end - p, "SHA256" ); break;
         case RSA_SHA384: p += snprintf( p, end - p, "SHA384" ); break;
         case RSA_SHA512: p += snprintf( p, end - p, "SHA512" ); break;
@@ -1495,9 +1496,10 @@ static void x509_hash( unsigned char *in, int len, int alg,
 #endif
         case RSA_MD5   :  md5( in, len, out    ); break;
         case RSA_SHA1  : sha1( in, len, out    ); break;
+        case RSA_SHA224: sha2( in, len, out, 1 ); break;
         case RSA_SHA256: sha2( in, len, out, 0 ); break;
-//      case RSA_SHA384: sha2( in, len, out, 0 ); break;
-//      case RSA_SHA512: sha2( in, len, out, 0 ); break;
+        case RSA_SHA384: sha3( in, len, out, 1 ); break;
+        case RSA_SHA512: sha3( in, len, out, 0 ); break;
         default:
             memset( out, '\xFF', len );
             break;
